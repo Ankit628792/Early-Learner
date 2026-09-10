@@ -1,0 +1,7 @@
+{
+  "name": "Early Learner",
+  "description": "Foundational learning app for young children to learn Hindi Varnamala, English Alphabets, and Numbers with seeing, listening, tracing, and object recognition.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
