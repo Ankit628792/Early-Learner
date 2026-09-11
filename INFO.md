@@ -90,3 +90,29 @@ We integrate active vibration alongside audio to reinforce muscular learning dur
     *   *First pulse*: 120ms tick.
     *   *Interval*: 120ms pause.
     *   *Second pulse*: 120ms tick.
+
+---
+
+## 🛠️ 4. Gesture Handlers & State-Safety in Jetpack Compose
+
+To provide tactile button responses and a continuous, responsive tracing canvas, components like `KidButton` and `TracingCanvas` leverage Compose's low-level `pointerInput` API.
+
+### The Stale Lambda Trap with `pointerInput(Unit)`
+Because `pointerInput(Unit)` keys its execution on a static `Unit`, the coroutine that handles the gesture processing loop is launched **exactly once** and persists for the entire lifecycle of that layout node. 
+If the pointer loop directly captures external callback parameters (such as `onClick` or `onAddPoint`), those lambdas become a stale closure. When the user navigates or details update, the pointer loop continues to run the original first-loaded closure, causing repeating elements or stuck screens.
+
+### The Solution: `rememberUpdatedState`
+To resolve this without restarting the touch coroutine on every single recomposition (which would break continuous drag gestures), we use the `rememberUpdatedState` API to bind dynamic callbacks inside the persistent gesture coroutine:
+
+```kotlin
+// Safely capture dynamic lambda parameter
+val currentOnClick by rememberUpdatedState(onClick)
+
+Modifier.pointerInput(Unit) {
+    detectTapGestures {
+        // Always executes the freshest state reference
+        currentOnClick()
+    }
+}
+```
+This ensures high-performance, seamless touch tracing and layout traversal across all curriculum cards!
