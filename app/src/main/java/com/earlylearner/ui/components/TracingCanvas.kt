@@ -34,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,6 +75,8 @@ fun TracingCanvas(
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
+    val currentOnAddPoint by rememberUpdatedState(onAddPoint)
+    val currentOnFinishStroke by rememberUpdatedState(onFinishStroke)
 
     LaunchedEffect(isCompleted) {
         if (isCompleted) {
@@ -172,19 +175,19 @@ fun TracingCanvas(
                         detectDragGestures(
                             onDragStart = { offset ->
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onAddPoint(offset)
+                                currentOnAddPoint(offset)
                             },
                             onDrag = { change, _ ->
                                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                onAddPoint(change.position)
+                                currentOnAddPoint(change.position)
                             },
                             onDragEnd = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onFinishStroke()
+                                currentOnFinishStroke()
                             },
                             onDragCancel = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onFinishStroke()
+                                currentOnFinishStroke()
                             }
                         )
                     }

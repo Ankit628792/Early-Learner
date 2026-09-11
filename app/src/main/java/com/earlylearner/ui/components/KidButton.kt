@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +53,7 @@ fun KidButton(
     minHeight: Dp = 56.dp,
     testTag: String = "kid_button"
 ) {
+    val currentOnClick by rememberUpdatedState(onClick)
     var isPressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.94f else 1.0f,
@@ -72,7 +74,7 @@ fun KidButton(
                         isPressed = true
                         tryAwaitRelease()
                         isPressed = false
-                        onClick()
+                        currentOnClick()
                     }
                 )
             }
