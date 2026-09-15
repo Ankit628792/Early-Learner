@@ -4,7 +4,6 @@ import com.earlylearner.data.model.LearningCategory
 import com.earlylearner.data.model.LearningItem
 import com.earlylearner.data.model.PracticeQuestion
 import com.earlylearner.data.model.PracticeType
-import kotlin.random.Random
 
 object QuestionGenerator {
 

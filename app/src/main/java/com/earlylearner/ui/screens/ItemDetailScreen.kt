@@ -28,9 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.GraphicEq
-import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -50,7 +48,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.earlylearner.data.local.LearningProgressEntity
@@ -66,7 +63,6 @@ import com.earlylearner.ui.theme.CreamBackground
 import com.earlylearner.ui.theme.ForestGreen
 import com.earlylearner.ui.theme.OceanBlue
 import com.earlylearner.ui.theme.SlateSubtitle
-import com.earlylearner.ui.theme.SoftLavender
 
 @Composable
 fun ItemDetailScreen(

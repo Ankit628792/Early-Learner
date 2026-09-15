@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,11 +25,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.HelpOutline
-import androidx.compose.material.icons.filled.Replay
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -55,14 +50,10 @@ import com.earlylearner.data.model.PracticeType
 import com.earlylearner.ui.components.KidButton
 import com.earlylearner.ui.components.KidTopBar
 import com.earlylearner.ui.theme.CharcoalText
-import com.earlylearner.ui.theme.CoralRed
 import com.earlylearner.ui.theme.CreamBackground
 import com.earlylearner.ui.theme.ForestGreen
 import com.earlylearner.ui.theme.GoldenStar
-import com.earlylearner.ui.theme.MintGreen
-import com.earlylearner.ui.theme.OceanBlue
 import com.earlylearner.ui.theme.SlateSubtitle
-import com.earlylearner.ui.theme.SoftLavender
 import com.earlylearner.ui.viewmodel.PracticeUiState
 
 @OptIn(ExperimentalLayoutApi::class)

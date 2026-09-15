@@ -9,7 +9,6 @@ import com.earlylearner.audio.ChildAudioPlayer
 import com.earlylearner.data.CurriculumData
 import com.earlylearner.data.QuestionGenerator
 import com.earlylearner.data.local.AppDatabase
-import com.earlylearner.data.local.CategoryStats
 import com.earlylearner.data.local.LearningProgressEntity
 import com.earlylearner.data.local.LearningRepository
 import com.earlylearner.data.model.LearningCategory
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 

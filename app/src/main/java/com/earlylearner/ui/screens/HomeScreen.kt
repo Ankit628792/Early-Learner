@@ -24,12 +24,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoStories
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Pets
-import androidx.compose.material.icons.filled.Quiz
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -60,8 +56,6 @@ import com.earlylearner.ui.theme.ForestGreen
 import com.earlylearner.ui.theme.GoldenStar
 import com.earlylearner.ui.theme.OceanBlue
 import com.earlylearner.ui.theme.SlateSubtitle
-import com.earlylearner.ui.theme.SoftLavender
-import com.earlylearner.ui.theme.SoftOrange
 
 @Composable
 fun HomeScreen(
