@@ -4,7 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.earlylearner.ui.MainAppContent
@@ -16,11 +19,15 @@ class MainActivity : ComponentActivity() {
     enableEdgeToEdge()
     setContent {
       MyApplicationTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-          MainAppContent()
+        Scaffold(
+          modifier = Modifier.fillMaxSize(),
+          contentWindowInsets = WindowInsets.safeDrawing
+        ) { innerPadding ->
+          MainAppContent(modifier = Modifier.padding(innerPadding))
         }
       }
     }
   }
 }
+
 
