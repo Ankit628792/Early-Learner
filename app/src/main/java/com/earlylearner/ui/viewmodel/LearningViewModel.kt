@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.earlylearner.audio.ChildAudioPlayer
 import com.earlylearner.data.CurriculumData
 import com.earlylearner.data.QuestionGenerator
+import com.earlylearner.data.TracingValidator
 import com.earlylearner.data.local.AppDatabase
 import com.earlylearner.data.local.LearningProgressEntity
 import com.earlylearner.data.local.LearningRepository
@@ -75,6 +76,9 @@ class LearningViewModel(application: Application) : AndroidViewModel(application
 
     private val _isTracingCompleted = MutableStateFlow<Boolean>(false)
     val isTracingCompleted: StateFlow<Boolean> = _isTracingCompleted.asStateFlow()
+
+    private val _tracingFeedbackMessage = MutableStateFlow<String?>(null)
+    val tracingFeedbackMessage: StateFlow<String?> = _tracingFeedbackMessage.asStateFlow()
 
     // Practice Quiz State
     private val _practiceState = MutableStateFlow(PracticeUiState())
@@ -182,20 +186,31 @@ class LearningViewModel(application: Application) : AndroidViewModel(application
         _userStrokes.value = currentStrokes
     }
 
-    fun finishStroke() {
+    fun finishStroke(canvasWidth: Float = 0f, canvasHeight: Float = 0f) {
         val currentStrokes = _userStrokes.value.toMutableList()
         currentStrokes.add(DrawStroke(emptyList()))
         _userStrokes.value = currentStrokes
 
-        // Check if user has drawn enough strokes to complete tracing
-        val totalPoints = _userStrokes.value.sumOf { it.points.size }
-        if (totalPoints > 25 && !_isTracingCompleted.value) {
-            val curr = _currentScreen.value
-            if (curr is ScreenDestination.Tracing) {
+        val curr = _currentScreen.value
+        if (curr is ScreenDestination.Tracing) {
+            val validation = TracingValidator.evaluateTrace(
+                character = curr.item.symbol,
+                strokes = _userStrokes.value,
+                canvasWidth = if (canvasWidth > 0f) canvasWidth else 400f,
+                canvasHeight = if (canvasHeight > 0f) canvasHeight else 400f
+            )
+
+            if (validation.isCorrect && !_isTracingCompleted.value) {
                 _isTracingCompleted.value = true
+                _tracingFeedbackMessage.value = "शाबाश! बहुत बढ़िया लिखा! 🌟"
                 audioPlayer.playCorrectChime()
                 viewModelScope.launch {
                     repository.recordTracingCompleted(curr.item.id, curr.category.id)
+                }
+            } else if (!_isTracingCompleted.value) {
+                val totalPoints = _userStrokes.value.sumOf { it.points.size }
+                if (totalPoints > 8) {
+                    _tracingFeedbackMessage.value = validation.feedbackMessage
                 }
             }
         }
@@ -209,6 +224,7 @@ class LearningViewModel(application: Application) : AndroidViewModel(application
     fun clearTracingCanvas() {
         _userStrokes.value = emptyList()
         _isTracingCompleted.value = false
+        _tracingFeedbackMessage.value = null
         audioPlayer.playPopSound()
     }
 

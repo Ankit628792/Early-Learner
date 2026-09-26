@@ -14,8 +14,7 @@
 # --- Data Models & Local Storage (Room Database) ---
 -keep class * extends androidx.room.RoomDatabase
 -dontwarn androidx.room.paging.**
--keep class com.earlylearner.data.local.** { *; }
--keep class com.earlylearner.data.model.** { *; }
+-keep class com.earlylearner.data.** { *; }
 
 # --- Moshi Serialization (Reflection & Codegen) ---
 -keepclassmembers class * {

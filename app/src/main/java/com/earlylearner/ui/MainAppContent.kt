@@ -32,6 +32,7 @@ fun MainAppContent(
     val isTracingCompleted by viewModel.isTracingCompleted.collectAsStateWithLifecycle()
     val practiceState by viewModel.practiceState.collectAsStateWithLifecycle()
     val tappedCountNumbers by viewModel.tappedCountNumbers.collectAsStateWithLifecycle()
+    val tracingFeedbackMessage by viewModel.tracingFeedbackMessage.collectAsStateWithLifecycle()
 
     // Handle System Back button
     BackHandler(enabled = currentScreen !is ScreenDestination.Home) {
@@ -123,10 +124,11 @@ fun MainAppContent(
                     strokes = userStrokes,
                     selectedColor = selectedBrushColor,
                     isCompleted = isTracingCompleted,
+                    feedbackMessage = tracingFeedbackMessage,
                     totalStars = totalStars,
                     onBackClick = { viewModel.navigateBack() },
                     onAddPoint = { offset -> viewModel.addStrokePoint(offset) },
-                    onFinishStroke = { viewModel.finishStroke() },
+                    onFinishStroke = { width, height -> viewModel.finishStroke(width, height) },
                     onColorSelected = { color -> viewModel.selectBrushColor(color) },
                     onClear = { viewModel.clearTracingCanvas() },
                     onSpeakItem = { viewModel.speakItem(screen.item) },

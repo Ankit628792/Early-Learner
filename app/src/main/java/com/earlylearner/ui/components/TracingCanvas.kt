@@ -68,8 +68,9 @@ fun TracingCanvas(
     strokes: List<DrawStroke>,
     selectedColor: Color,
     isCompleted: Boolean,
+    feedbackMessage: String? = null,
     onAddPoint: (Offset) -> Unit,
-    onFinishStroke: () -> Unit,
+    onFinishStroke: (Float, Float) -> Unit,
     onColorSelected: (Color) -> Unit,
     onClear: () -> Unit,
     modifier: Modifier = Modifier
@@ -77,6 +78,7 @@ fun TracingCanvas(
     val haptic = LocalHapticFeedback.current
     val currentOnAddPoint by rememberUpdatedState(onAddPoint)
     val currentOnFinishStroke by rememberUpdatedState(onFinishStroke)
+    var canvasSize by remember { mutableStateOf(androidx.compose.ui.geometry.Size(400f, 400f)) }
 
     LaunchedEffect(isCompleted) {
         if (isCompleted) {
@@ -158,40 +160,44 @@ fun TracingCanvas(
                 .testTag("tracing_drawing_board"),
             contentAlignment = Alignment.Center
         ) {
-            // Background Guide Letter Rendered large and faint
-            Text(
-                text = character,
-                fontSize = 180.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFE2E8F0),
-                modifier = Modifier.align(Alignment.Center)
-            )
-
-            // Drawing Stroke Layer
+            // Drawing & Guide Stroke Layer
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
-                    .pointerInput(Unit) {
+                    .pointerInput(character) {
                         detectDragGestures(
                             onDragStart = { offset ->
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 currentOnAddPoint(offset)
                             },
                             onDrag = { change, _ ->
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                 currentOnAddPoint(change.position)
                             },
                             onDragEnd = {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                currentOnFinishStroke()
+                                currentOnFinishStroke(canvasSize.width, canvasSize.height)
                             },
                             onDragCancel = {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                currentOnFinishStroke()
+                                currentOnFinishStroke(canvasSize.width, canvasSize.height)
                             }
                         )
                     }
             ) {
+                canvasSize = size
+
+                // Draw background faint guide character precisely centered
+                val nativeCanvas = drawContext.canvas.nativeCanvas
+                val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+                    textSize = size.width * 0.72f
+                    typeface = android.graphics.Typeface.DEFAULT_BOLD
+                    color = android.graphics.Color.parseColor("#E2E8F0")
+                    textAlign = android.graphics.Paint.Align.CENTER
+                }
+                val textBounds = android.graphics.Rect()
+                paint.getTextBounds(character, 0, character.length, textBounds)
+                val centerX = size.width / 2f
+                val centerY = (size.height / 2f) - textBounds.exactCenterY()
+                nativeCanvas.drawText(character, centerX, centerY, paint)
+
+                // Render user strokes
                 strokes.forEach { stroke ->
                     if (stroke.points.size > 1) {
                         val path = Path().apply {
@@ -205,7 +211,7 @@ fun TracingCanvas(
                             path = path,
                             color = strokeColor,
                             style = Stroke(
-                                width = 32f,
+                                width = 36f,
                                 cap = StrokeCap.Round,
                                 join = StrokeJoin.Round
                             )
@@ -214,21 +220,23 @@ fun TracingCanvas(
                         val pt = stroke.points.first()
                         drawCircle(
                             color = pt.color,
-                            radius = 16f,
+                            radius = 18f,
                             center = pt.offset
                         )
                     }
                 }
             }
 
-            // Success Star Celebration Overlay
+            // Success Star Celebration Overlay or Real-time Feedback Hint
             if (isCompleted) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = 16.dp)
                         .background(MintGreen, RoundedCornerShape(24.dp))
-                        .padding(horizontal = 18.dp, vertical = 8.dp),
+                        .shadow(2.dp, RoundedCornerShape(24.dp))
+                        .padding(horizontal = 18.dp, vertical = 8.dp)
+                        .testTag("tracing_success_badge"),
                     contentAlignment = Alignment.Center
                 ) {
                     Row(
@@ -242,7 +250,7 @@ fun TracingCanvas(
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
-                            text = "शाबाश! बहुत बढ़िया लिखा!",
+                            text = "शाबाश! बहुत बढ़िया लिखा! 🌟",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
@@ -250,6 +258,26 @@ fun TracingCanvas(
                             color = Color.White
                         )
                     }
+                }
+            } else if (!feedbackMessage.isNullOrEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 16.dp)
+                        .background(Color(0xFFFEF3C7), RoundedCornerShape(20.dp))
+                        .border(1.dp, Color(0xFFFDE68A), RoundedCornerShape(20.dp))
+                        .padding(horizontal = 16.dp, vertical = 6.dp)
+                        .testTag("tracing_feedback_hint"),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = feedbackMessage,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        ),
+                        color = Color(0xFF92400E)
+                    )
                 }
             }
         }

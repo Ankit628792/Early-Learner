@@ -145,12 +145,13 @@ class ChildAudioPlayer(private val context: Context) : TextToSpeech.OnInitListen
         }
     }
 
-    // Synthesized Sound Effects (Pure Sine/Envelope tones - requires zero external asset files!)
+    // Button click / navigation feedback (Vibration only, zero audio sound)
     fun playPopSound() {
-        audioScope.launch {
-            triggerVibration(40)
-            synthesizeTone(frequencies = doubleArrayOf(440.0, 660.0), durationMs = 70, volume = 0.4f)
-        }
+        triggerVibration(40)
+    }
+
+    fun triggerButtonClickVibration(durationMs: Long = 40) {
+        triggerVibration(durationMs)
     }
 
     fun playCorrectChime() {
